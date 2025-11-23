@@ -64,11 +64,11 @@
           JobMatch Assistant • Real-time Matching
         </div>
         <h1 class="text-4xl md:text-5xl font-semibold leading-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-          Voir les meilleures offres adaptées à TON CV.
+          Voir les vraies offres qui matchent TON CV.
         </h1>
         <p class="mt-3 text-sm md:text-base text-slate-400 max-w-2xl">
-          Importe ton CV (peu importe le domaine), l’outil analyse ton profil et génère
-          des recherches intelligentes sur plusieurs plateformes. Interface premium inspirée d’Apple & Tesla.
+          Importe ton CV (PDF / Word), l’outil analyse ton profil et va chercher des offres réelles
+          sur Indeed Canada. Interface premium inspirée d’Apple & Tesla.
         </p>
       </div>
 
@@ -104,26 +104,8 @@
             <input type="file" id="cvFile" class="hidden" accept=".pdf,.doc,.docx,.txt" />
           </label>
 
-          <!-- Filtre fraîcheur (conserve la logique mais l'effet reste léger car on ne date pas chaque annonce) -->
+          <!-- Auto-refresh simple -->
           <div class="space-y-1 mt-2">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-300">Rafraîchir les recherches récentes</span>
-              <select id="recentSelect"
-                      class="bg-slate-950/90 border border-slate-700/80 text-[9px] text-slate-300 rounded-full px-2 py-1">
-                <option value="0">Standard</option>
-                <option value="15">Dernières 15 min</option>
-                <option value="30">Dernières 30 min</option>
-                <option value="60">Dernière heure</option>
-                <option value="180">Dernières 3 h</option>
-              </select>
-            </div>
-            <p class="text-[9px] text-slate-500">
-              L’actualisation relance une recherche fraîche sur chaque plateforme.
-            </p>
-          </div>
-
-          <!-- Auto-refresh -->
-          <div class="space-y-1">
             <div class="flex items-center justify-between">
               <span class="text-[10px] text-slate-300">
                 Rafraîchissement automatique
@@ -136,29 +118,27 @@
               </select>
             </div>
             <p class="text-[9px] text-slate-500">
-              Quand activé, l’outil relance régulièrement la recherche selon ton CV.
+              Quand activé, l’outil relance régulièrement la recherche avec ton CV.
             </p>
           </div>
 
           <button
             id="scanBtn"
             class="w-full mt-2 py-3 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 text-[13px] font-semibold text-slate-950 btn-soft">
-            🚀 Analyser mon CV & générer les recherches
+            🚀 Analyser mon CV & trouver des offres Indeed
           </button>
 
           <div class="mt-3 text-[10px] text-slate-500">
-            Plateformes ciblées :
-            <span class="text-cyan-300">LinkedIn Jobs</span> •
-            <span class="text-cyan-300">Indeed</span> •
-            <span class="text-cyan-300">Glassdoor</span> •
-            <span class="text-cyan-300">Talent.com</span>
+            Plateforme ciblée pour l’instant :
+            <span class="text-cyan-300">Indeed Canada</span><br>
+            (LinkedIn / Glassdoor pourront être ajoutés dans une prochaine version).
           </div>
 
           <div id="status" class="mt-2 text-[10px] text-cyan-400 min-h-[14px]"></div>
 
           <div id="newBadge"
                class="hidden mt-1 text-[9px] text-emerald-300 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/40">
-            Nouvelles recherches générées lors du dernier rafraîchissement.
+            Nouvelles offres détectées au dernier rafraîchissement.
           </div>
         </section>
 
@@ -166,7 +146,7 @@
         <section class="w-full lg:w-2/3">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-sm font-semibold text-slate-200 tracking-wide">
-              2. Résultats de recherche recommandés
+              2. Offres Indeed correspondantes
             </h2>
             <span id="countBadge"
                   class="text-[10px] text-slate-400 px-2 py-1 rounded-full border border-slate-700/80">
@@ -191,13 +171,13 @@
 
       <div class="space-y-2">
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Entreprise / Plateforme</label>
+          <label class="block text-[10px] text-slate-400 mb-1">Entreprise</label>
           <input id="modalCompany"
                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-2 py-1.5 text-[10px] text-slate-200"
                  readonly>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Titre / type de recherche</label>
+          <label class="block text-[10px] text-slate-400 mb-1">Poste</label>
           <input id="modalJobTitle"
                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-2 py-1.5 text-[10px] text-slate-200"
                  readonly>
@@ -247,7 +227,6 @@
   </div>
 
   <script>
-    // URL de ton backend Render
     const BACKEND_BASE = "https://jobmatch-backend-teh8.onrender.com";
 
     const cvInput = document.getElementById("cvFile");
@@ -255,7 +234,6 @@
     const statusEl = document.getElementById("status");
     const jobsEl = document.getElementById("jobs");
     const countBadge = document.getElementById("countBadge");
-    const recentSelect = document.getElementById("recentSelect");
     const autoRefreshSelect = document.getElementById("autoRefresh");
     const newBadge = document.getElementById("newBadge");
     const cvLabel = document.getElementById("cvLabel");
@@ -284,14 +262,6 @@
             </span>
           </div>
         `;
-      } else {
-        cvLabel.innerHTML = `
-          <span class="text-xs text-slate-400">Glisse ton CV ici ou clique pour sélectionner</span>
-          <span class="px-3 py-1 rounded-full bg-slate-900/90 text-[10px] text-cyan-300 border border-cyan-500/20">
-            Choisir un fichier
-          </span>
-          <input type="file" id="cvFile" class="hidden" accept=".pdf,.doc,.docx,.txt" />
-        `;
       }
     });
 
@@ -302,10 +272,6 @@
       }
       currentFile = cvInput.files[0];
       fetchJobs(false);
-    });
-
-    recentSelect.addEventListener("change", () => {
-      if (currentFile) fetchJobs(false);
     });
 
     autoRefreshSelect.addEventListener("change", () => {
@@ -331,16 +297,15 @@
 
       newBadge.classList.add("hidden");
       statusEl.textContent = isAuto
-        ? "Actualisation des recherches…"
-        : "Analyse de ton CV et génération des recherches...";
+        ? "Actualisation des offres Indeed…"
+        : "Analyse de ton CV et recherche d'offres Indeed...";
       scanBtn.disabled = true;
       scanBtn.classList.add("opacity-60", "cursor-wait");
 
       const formData = new FormData();
       formData.append("cv", file);
 
-      const recentMinutes = parseInt(recentSelect.value || "0", 10);
-      const url = `${BACKEND_BASE}/api/match?recent_minutes=${recentMinutes}&only_paid=true`;
+      const url = `${BACKEND_BASE}/api/match?recent_minutes=0&only_paid=true`;
 
       try {
         const res = await fetch(url, {
@@ -355,10 +320,10 @@
 
         const jobs = await res.json();
 
-        countBadge.textContent = `${jobs.length} recherche${jobs.length > 1 ? "s" : ""}`;
+        countBadge.textContent = `${jobs.length} offre${jobs.length > 1 ? "s" : ""}`;
         statusEl.textContent = jobs.length
-          ? (isAuto ? "Liste de recherches mise à jour." : "Analyse terminée. Résultats ci-dessous.")
-          : "Aucun résultat pour ce filtre.";
+          ? (isAuto ? "Liste d'offres mise à jour." : "Analyse terminée. Résultats ci-dessous.")
+          : "Aucune offre trouvée pour ce CV pour l'instant.";
 
         const newKeys = new Set();
         let hasNew = false;
@@ -404,6 +369,14 @@
       meta.className = "text-[10px] text-slate-400";
       meta.textContent = `${job.company} • ${job.location}`;
 
+      const dateRow = document.createElement("div");
+      dateRow.className = "text-[9px] text-slate-500";
+      if (job.published_at) {
+        dateRow.textContent = `Date sur Indeed : ${job.published_at}`;
+      } else {
+        dateRow.textContent = "Date sur Indeed : non précisée";
+      }
+
       const snippet = document.createElement("div");
       snippet.className = "text-[10px] text-slate-500";
       snippet.textContent = job.snippet;
@@ -415,7 +388,7 @@
       link.href = job.url;
       link.target = "_blank";
       link.className = "text-[10px] text-cyan-400 hover:underline";
-      link.textContent = "Ouvrir cette recherche sur la plateforme";
+      link.textContent = "Voir l’offre sur Indeed";
 
       const right = document.createElement("div");
       right.className = "flex items-center gap-2";
@@ -439,6 +412,7 @@
 
       card.appendChild(title);
       card.appendChild(meta);
+      card.appendChild(dateRow);
       card.appendChild(snippet);
       card.appendChild(bottom);
 
@@ -487,7 +461,7 @@
         hr_email: modalHrEmail.value,
         candidate_name: modalName.value || "Votre nom",
         candidate_email: modalEmail.value || "votre.email@exemple.com",
-        cv_summary: modalSummary.value || "Profil polyvalent, voir CV joint."
+        cv_summary: modalSummary.value || "Profil lié à ce type de poste (voir CV joint)."
       };
 
       try {
