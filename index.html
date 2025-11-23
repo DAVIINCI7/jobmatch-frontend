@@ -64,11 +64,11 @@
           JobMatch Assistant • Real-time Matching
         </div>
         <h1 class="text-4xl md:text-5xl font-semibold leading-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-          Voir les meilleures offres IT avant tout le monde.
+          Voir les meilleures offres adaptées à TON CV.
         </h1>
         <p class="mt-3 text-sm md:text-base text-slate-400 max-w-2xl">
-          Importation de ton CV, analyse automatique, filtrage par fraîcheur,
-          postes rémunérés uniquement et interface premium inspirée d’Apple & Tesla.
+          Importe ton CV (peu importe le domaine), l’outil analyse ton profil et génère
+          des recherches intelligentes sur plusieurs plateformes. Interface premium inspirée d’Apple & Tesla.
         </p>
       </div>
 
@@ -92,11 +92,11 @@
             1. Importer ton CV
           </h2>
           <p class="text-xs text-slate-400">
-            PDF / DOCX / TXT. Utilisé uniquement pour générer des recherches ciblées sur plusieurs plateformes.
+            PDF / DOCX / TXT. Le CV est uniquement utilisé pour construire des recherches personnalisées.
           </p>
 
           <label id="cvLabel"
-            class="glass-soft border-dashed border-slate-600/60 rounded-2xl px-4 py-5 flex flex-col items-center gap-2 cursor-pointer btn-soft">
+            class="glass-soft border-dashed border-slate-600/60 rounded-2xl px-4 py-5 flex flex-col items-center gap-2 cursor-pointer btn-soft text-center">
             <span class="text-xs text-slate-400">Glisse ton CV ici ou clique pour sélectionner</span>
             <span class="px-3 py-1 rounded-full bg-slate-900/90 text-[10px] text-cyan-300 border border-cyan-500/20">
               Choisir un fichier
@@ -104,13 +104,13 @@
             <input type="file" id="cvFile" class="hidden" accept=".pdf,.doc,.docx,.txt" />
           </label>
 
-          <!-- Filtre fraîcheur -->
+          <!-- Filtre fraîcheur (conserve la logique mais l'effet reste léger car on ne date pas chaque annonce) -->
           <div class="space-y-1 mt-2">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-300">Afficher uniquement les postes récents</span>
+              <span class="text-[10px] text-slate-300">Rafraîchir les recherches récentes</span>
               <select id="recentSelect"
                       class="bg-slate-950/90 border border-slate-700/80 text-[9px] text-slate-300 rounded-full px-2 py-1">
-                <option value="0">Tous</option>
+                <option value="0">Standard</option>
                 <option value="15">Dernières 15 min</option>
                 <option value="30">Dernières 30 min</option>
                 <option value="60">Dernière heure</option>
@@ -118,21 +118,7 @@
               </select>
             </div>
             <p class="text-[9px] text-slate-500">
-              Le backend filtre selon cette fenêtre de temps.
-            </p>
-          </div>
-
-          <!-- Postes payés uniquement -->
-          <div class="space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-300">
-                Afficher uniquement les postes payés
-              </span>
-              <input type="checkbox" id="onlyPaid"
-                     class="w-3.5 h-3.5 accent-cyan-400 cursor-pointer" checked>
-            </div>
-            <p class="text-[9px] text-slate-500">
-              Filtre les annonces détectées comme rémunérées (salaire, avantage, contrat payé).
+              L’actualisation relance une recherche fraîche sur chaque plateforme.
             </p>
           </div>
 
@@ -150,14 +136,14 @@
               </select>
             </div>
             <p class="text-[9px] text-slate-500">
-              Quand activé, la page relance automatiquement la recherche selon ton CV et ton filtre.
+              Quand activé, l’outil relance régulièrement la recherche selon ton CV.
             </p>
           </div>
 
           <button
             id="scanBtn"
             class="w-full mt-2 py-3 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 text-[13px] font-semibold text-slate-950 btn-soft">
-            🚀 Analyser mon CV & trouver des offres
+            🚀 Analyser mon CV & générer les recherches
           </button>
 
           <div class="mt-3 text-[10px] text-slate-500">
@@ -172,7 +158,7 @@
 
           <div id="newBadge"
                class="hidden mt-1 text-[9px] text-emerald-300 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/40">
-            Nouvelles offres détectées au dernier rafraîchissement.
+            Nouvelles recherches générées lors du dernier rafraîchissement.
           </div>
         </section>
 
@@ -180,7 +166,7 @@
         <section class="w-full lg:w-2/3">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-sm font-semibold text-slate-200 tracking-wide">
-              2. Offres correspondantes
+              2. Résultats de recherche recommandés
             </h2>
             <span id="countBadge"
                   class="text-[10px] text-slate-400 px-2 py-1 rounded-full border border-slate-700/80">
@@ -205,13 +191,13 @@
 
       <div class="space-y-2">
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Entreprise</label>
+          <label class="block text-[10px] text-slate-400 mb-1">Entreprise / Plateforme</label>
           <input id="modalCompany"
                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-2 py-1.5 text-[10px] text-slate-200"
                  readonly>
         </div>
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">Poste</label>
+          <label class="block text-[10px] text-slate-400 mb-1">Titre / type de recherche</label>
           <input id="modalJobTitle"
                  class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-2 py-1.5 text-[10px] text-slate-200"
                  readonly>
@@ -240,7 +226,7 @@
           <label class="block text-[10px] text-slate-400 mb-1">Résumé rapide de ton profil</label>
           <textarea id="modalSummary"
                     class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-2 py-1.5 text-[10px] text-slate-200 min-h-[70px]"
-                    placeholder="Support informatique N1/N2, AD, M365, expérience CHU / entreprise, etc."></textarea>
+                    placeholder="Support informatique, logistique, banque, vente, etc. selon ton cas."></textarea>
         </div>
       </div>
 
@@ -273,7 +259,6 @@
     const autoRefreshSelect = document.getElementById("autoRefresh");
     const newBadge = document.getElementById("newBadge");
     const cvLabel = document.getElementById("cvLabel");
-    const onlyPaidCheckbox = document.getElementById("onlyPaid");
 
     let currentFile = null;
     let autoRefreshId = null;
@@ -284,6 +269,30 @@
 
     cvInput.addEventListener("change", () => {
       currentFile = cvInput.files[0] || null;
+
+      if (currentFile) {
+        cvLabel.innerHTML = `
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-xs text-emerald-300 font-semibold">
+              ✓ CV importé avec succès
+            </span>
+            <span class="text-[10px] text-slate-400 break-all">
+              ${currentFile.name} (${(currentFile.size/1024).toFixed(1)} KB)
+            </span>
+            <span class="px-3 py-1 rounded-full bg-slate-900/90 text-[10px] text-cyan-300 border border-cyan-500/20">
+              Changer de fichier
+            </span>
+          </div>
+        `;
+      } else {
+        cvLabel.innerHTML = `
+          <span class="text-xs text-slate-400">Glisse ton CV ici ou clique pour sélectionner</span>
+          <span class="px-3 py-1 rounded-full bg-slate-900/90 text-[10px] text-cyan-300 border border-cyan-500/20">
+            Choisir un fichier
+          </span>
+          <input type="file" id="cvFile" class="hidden" accept=".pdf,.doc,.docx,.txt" />
+        `;
+      }
     });
 
     scanBtn.addEventListener("click", () => {
@@ -322,7 +331,7 @@
 
       newBadge.classList.add("hidden");
       statusEl.textContent = isAuto
-        ? "Vérification des nouvelles offres récentes..."
+        ? "Actualisation des recherches…"
         : "Analyse de ton CV et génération des recherches...";
       scanBtn.disabled = true;
       scanBtn.classList.add("opacity-60", "cursor-wait");
@@ -331,9 +340,7 @@
       formData.append("cv", file);
 
       const recentMinutes = parseInt(recentSelect.value || "0", 10);
-      const onlyPaid = onlyPaidCheckbox.checked ? "true" : "false";
-
-      const url = `${BACKEND_BASE}/api/match?recent_minutes=${recentMinutes}&only_paid=${onlyPaid}`;
+      const url = `${BACKEND_BASE}/api/match?recent_minutes=${recentMinutes}&only_paid=true`;
 
       try {
         const res = await fetch(url, {
@@ -348,10 +355,10 @@
 
         const jobs = await res.json();
 
-        countBadge.textContent = `${jobs.length} offre${jobs.length > 1 ? "s" : ""}`;
+        countBadge.textContent = `${jobs.length} recherche${jobs.length > 1 ? "s" : ""}`;
         statusEl.textContent = jobs.length
-          ? (isAuto ? "Liste mise à jour." : "Analyse terminée. Résultats ci-dessous.")
-          : "Aucune offre correspondant aux filtres.";
+          ? (isAuto ? "Liste de recherches mise à jour." : "Analyse terminée. Résultats ci-dessous.")
+          : "Aucun résultat pour ce filtre.";
 
         const newKeys = new Set();
         let hasNew = false;
@@ -397,19 +404,6 @@
       meta.className = "text-[10px] text-slate-400";
       meta.textContent = `${job.company} • ${job.location}`;
 
-      const pay = document.createElement("div");
-      pay.className = "text-[9px]";
-      if (job.is_paid) {
-        pay.innerHTML = `<span class="text-emerald-300">Poste rémunéré</span>` +
-                        (job.salary_text ? ` <span class="text-slate-500">· ${job.salary_text}</span>` : "");
-      } else {
-        pay.innerHTML = `<span class="text-slate-500">Potentiellement non rémunéré / à vérifier</span>`;
-      }
-
-      const pub = document.createElement("div");
-      pub.className = "text-[9px] text-slate-500";
-      pub.textContent = "Publié : " + formatPublishedAt(job.published_at);
-
       const snippet = document.createElement("div");
       snippet.className = "text-[10px] text-slate-500";
       snippet.textContent = job.snippet;
@@ -421,7 +415,7 @@
       link.href = job.url;
       link.target = "_blank";
       link.className = "text-[10px] text-cyan-400 hover:underline";
-      link.textContent = "Voir l’offre sur la plateforme";
+      link.textContent = "Ouvrir cette recherche sur la plateforme";
 
       const right = document.createElement("div");
       right.className = "flex items-center gap-2";
@@ -429,12 +423,12 @@
       const score = document.createElement("div");
       score.className =
         "px-2 py-1 rounded-full text-[9px] text-cyan-300 bg-cyan-500/10 border border-cyan-500/30";
-      score.textContent = `Match ${Math.round(job.match_score * 100)}%`;
+      score.textContent = `Pertinence ${Math.round(job.match_score * 100)}%`;
 
       const contactBtn = document.createElement("button");
       contactBtn.className =
         "px-3 py-1 rounded-full text-[9px] text-slate-900 bg-gradient-to-r from-cyan-400 to-blue-500 btn-soft";
-      contactBtn.textContent = "Contacter HR";
+      contactBtn.textContent = "Contacter HR (optionnel)";
       contactBtn.onclick = () => openModal(job);
 
       right.appendChild(score);
@@ -445,29 +439,10 @@
 
       card.appendChild(title);
       card.appendChild(meta);
-      card.appendChild(pay);
-      card.appendChild(pub);
       card.appendChild(snippet);
       card.appendChild(bottom);
 
       return card;
-    }
-
-    function formatPublishedAt(iso) {
-      try {
-        const d = new Date(iso);
-        const now = new Date();
-        const diffMs = now - d;
-        const diffMin = Math.round(diffMs / 60000);
-        if (diffMin < 1) return "à l'instant";
-        if (diffMin < 60) return `il y a ${diffMin} min`;
-        const diffH = Math.round(diffMin / 60);
-        if (diffH < 24) return `il y a ${diffH} h`;
-        const diffJ = Math.round(diffH / 24);
-        return `il y a ${diffJ} j`;
-      } catch {
-        return iso;
-      }
     }
 
     // ---------- Modal contact HR ----------
@@ -512,7 +487,7 @@
         hr_email: modalHrEmail.value,
         candidate_name: modalName.value || "Votre nom",
         candidate_email: modalEmail.value || "votre.email@exemple.com",
-        cv_summary: modalSummary.value || "Support informatique / IT, niveaux 1-2, environnements Microsoft."
+        cv_summary: modalSummary.value || "Profil polyvalent, voir CV joint."
       };
 
       try {
